@@ -1,16 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
-    const { data: session } = useSession();
-    const router = useRouter();
-    if (!session) {
-        return (
-            router.push("/")
-        );
-    }
   return (
     <div className="pt-[72px] w-full min-h-screen flex items-center justify-center flex-col gap-y-5">
       <h1>Home page under construction</h1>

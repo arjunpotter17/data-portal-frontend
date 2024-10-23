@@ -18,7 +18,7 @@ const handler = NextAuth({
           if(!credentials){
             return null;
           }
-          const response = await fetch('http://localhost:5000/api/user/login', {
+          const response = await fetch('http://52.63.161.197/api/user/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

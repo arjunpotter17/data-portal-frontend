@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react"; // Using NextAuth for login
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"; // Importing Sonner for toast notifications
-import { useSession } from "next-auth/react";
+import { motion } from "framer-motion"; // Importing Framer Motion
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -16,12 +16,6 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  const { data: session } = useSession();
-
-  if (session) {
-    router.push("/home");
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -29,11 +23,14 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const loadingToast = toast.loading("Logging you in");
       const res = await signIn("credentials", {
         redirect: false,
         username: form.email,
         password: form.password,
       });
+
+      toast.dismiss(loadingToast);
 
       if (res?.error) {
         setErrorMessage("Invalid email or password.");
@@ -45,7 +42,6 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Error during login:", error);
       setErrorMessage("Login failed. Please try again.");
-      // Show Sonner error toast
       toast.error("Login failed. Please try again.");
     }
   };
@@ -56,7 +52,13 @@ export default function LoginPage() {
       <button onClick={() => router.push('/')} className="mb-4 text-white hover:bg-proto-dark-blue bg-proto-blue px-3 py-1 rounded self-start">
         Home
       </button>
-      <div className="w-full max-w-md bg-[#15191b] p-8 rounded shadow-lg mt-16">
+      {/* Using Framer Motion for fade-in effect */}
+      <motion.div 
+        className="w-full max-w-md bg-[#15191b] p-8 rounded shadow-lg mt-16"
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="text-2xl font-bold mb-4 text-proto-blue">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -68,7 +70,7 @@ export default function LoginPage() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-[#15191b] text-white"
+              className="w-full p-2 border border-gray-600 rounded bg-[#15191b] text-white focus:outline-none" // Remove outline
               required
             />
           </div>
@@ -81,7 +83,7 @@ export default function LoginPage() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-600 rounded bg-[#15191b] text-white"
+              className="w-full p-2 border border-gray-600 rounded bg-[#15191b] text-white focus:outline-none" // Remove outline
               required
             />
           </div>
@@ -108,7 +110,7 @@ export default function LoginPage() {
             Request access
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
