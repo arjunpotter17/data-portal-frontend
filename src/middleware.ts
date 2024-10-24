@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
 
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const publicPaths = ['/', '/auth/login', '/auth/register'];
-
+  console.log('token:', token);
 
   const { pathname } = req.nextUrl;
 

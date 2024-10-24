@@ -37,6 +37,7 @@ export default function LoginPage() {
         toast.error("Invalid email or password.");
         return;
       }
+      console.log('tried home route')
       router.push("/home");
       toast.success("Login successful!");
     } catch (error) {
